@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сайт соціологічних опитувань "Думка"</title>
+  <style>
+    :root {
+      --primary: #1f3a60;
+      --primary-dark: #142640;
+      --accent: #2e7d32;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #222222;
+      --muted: #555555;
+      --border: #d0d7de;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Верхня технічна панель */
+    .top-panel {
+      background-color: #e9ecef;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 20px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-panel-left, .top-panel-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Головна шапка */
+    .main-header {
+      background-color: var(--primary);
+      color: #ffffff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      cursor: pointer;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-sub {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .search-container {
+      display: flex;
+      width: 380px;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: 3px 0 0 3px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    .search-container button {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+      border-radius: 0 3px 3px 0;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    /* Головне меню */
+    .menu-nav {
+      background-color: var(--primary-dark);
+      display: flex;
+      padding: 0 20px;
+    }
+
+    .menu-btn {
+      color: #e2e8f0;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      border-bottom: 3px solid transparent;
+      user-select: none;
+    }
+
+    .menu-btn:hover, .menu-btn.active {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border-bottom-color: #4ade80;
+    }
+
+    /* Основний вміст */
+    .content-area {
+      max-width: 1100px;
+      width: 100%;
+      margin: 18px auto;
+      padding: 0 15px;
+      flex: 1;
+    }
+
+    .breadcrumb-trail {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 15px;
+    }
+
+    .breadcrumb-trail a {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .panel-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    /* Банер опитування дня */
+    .banner-highlight {
+      background-color: #0f3460;
+      color: #ffffff;
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tag-badge {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #1e293b;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 7px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .tag-badge-accent {
+      background-color: #d97706;
+      color: #ffffff;
+    }
+
+    /* Кнопки */
+    .action-btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+      padding: 8px 16px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background-color: #256629;
+      border-color: #256629;
+    }
+
+    /* Сіра кнопка: неактивне / очікує запуску */
+    .action-btn-neutral {
+      background-color: #475569;
+      border-color: #475569;
+    }
+
+    .action-btn-neutral:hover {
+      background-color: #334155;
+      border-color: #334155;
+    }
+
+    /* Біла кнопка: другорядна дія */
+    .action-btn-light {
+      background-color: #ffffff;
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .action-btn-light:hover {
+      background-color: #f1f5f9;
+      border-color: var(--border);
+    }
+
+    /* Помаранчева кнопка: акцент банера */
+    .action-btn-warning {
+      background-color: #f59e0b;
+      border-color: #f59e0b;
+      color: #1e293b;
+    }
+
+    .action-btn-warning:hover {
+      background-color: #d97706;
+      border-color: #d97706;
+    }
+
+    /* Компактний розмір */
+    .action-btn-sm {
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    /* Червона кнопка: видалення / скидання */
+    .action-btn-danger {
+      background-color: #dc2626;
+      border-color: #dc2626;
+      color: #ffffff;
+    }
+
+    .action-btn-danger:hover {
+      background-color: #b91c1c;
+      border-color: #b91c1c;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .admin-form-grid .input-box {
+      margin-bottom: 0;
+    }
+
+    .admin-question-box {
+      border: 1px solid var(--border);
+      background-color: #ffffff;
+      padding: 12px;
+      border-radius: 3px;
+      margin-bottom: 10px;
+    }
+
+    .tag-badge-success {
+      background-color: #dcfce7;
+      color: #15803d;
+    }
+
+    .tag-badge-muted {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+
+    .form-error {
+      display: none;
+      color: #b91c1c;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* Підрозділи аналітики */
+    .sub-panel {
+      background-color: #fafbfc;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .sub-panel-title {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .sub-panel-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .question-result {
+      margin-bottom: 18px;
+    }
+
+    .question-result h4 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background-color: #ffffff;
+    }
+
+    .data-table th, .data-table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .data-table th {
+      background-color: #f1f5f9;
+      font-size: 12px;
+    }
+
+    .data-table .tag-badge {
+      margin-bottom: 0;
+    }
+
+    .doc-row {
+      padding: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    /* Сітки швидкого доступу та опитувань */
+    .quick-access-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .quick-box {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background-color: #ffffff;
+      padding: 15px;
+      cursor: pointer;
+    }
+
+    .quick-box:hover {
+      border-color: var(--primary);
+      background-color: #fafbfc;
+    }
+
+    .quick-box h4 {
+      color: var(--primary);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .category-filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-item {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background-color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .filter-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .data-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background-color: #ffffff;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .data-card h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* Інтерфейс заповнення анкети */
+    .progress-bar-shell {
+      background-color: #e2e8f0;
+      border-radius: 3px;
+      height: 8px;
+      width: 100%;
+      margin: 12px 0 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background-color: var(--accent);
+      height: 100%;
+      width: 25%;
+      transition: width 0.2s;
+    }
+
+    .question-wrapper {
+      margin-bottom: 20px;
+    }
+
+    .question-heading {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .answers-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .answer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .answer-row:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Графіки та відсотки */
+    .stat-row {
+      margin-bottom: 14px;
+    }
+
+    .stat-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .stat-text span:last-child {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .stat-bar-container {
+      background-color: #e2e8f0;
+      height: 20px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .stat-bar-value {
+      background-color: var(--primary);
+      height: 100%;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+    }
+
+    /* Форми */
+    .input-box {
+      margin-bottom: 14px;
+    }
+
+    .input-box label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .input-box input, .input-box select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    footer {
+      background-color: #1e293b;
+      color: #cbd5e1;
+      padding: 20px;
+      font-size: 12px;
+      margin-top: auto;
+      border-top: 1px solid #334155;
+    }
+
+    .footer-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer-links a {
+      color: #93c5fd;
+      text-decoration: none;
+      margin-right: 12px;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .banner-counter-box {
+      text-align: right;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 14px;
+      border-radius: 4px;
+      min-width: 170px;
+    }
+
+    .cabinet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 16px;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Адаптивність під телефони та планшети */
+    @media (max-width: 768px) {
+      .top-panel {
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        font-size: 12px;
+      }
+
+      .top-panel-left, .top-panel-right {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .main-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .logo-container {
+        flex-wrap: wrap;
+        gap: 2px 8px;
+      }
+
+      .search-container {
+        width: 100%;
+      }
+
+      .menu-nav {
+        padding: 0 6px;
+        flex-wrap: wrap;
+      }
+
+      .menu-btn {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 9px 10px;
+        font-size: 13px;
+      }
+
+      .content-area {
+        margin: 12px auto;
+        padding: 0 10px;
+      }
+
+      .panel-card {
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+
+      .sub-panel {
+        padding: 12px;
+      }
+
+      .banner-highlight {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+        gap: 14px;
+      }
+
+      .banner-highlight h2 {
+        font-size: 19px !important;
+      }
+
+      .banner-counter-box {
+        text-align: left;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        min-width: 0;
+        padding: 10px 12px;
+      }
+
+      .cards-grid,
+      .quick-access-row,
+      .cabinet-grid,
+      .admin-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .doc-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .data-table {
+        min-width: 520px;
+      }
+
+      footer {
+        padding: 16px 12px;
+      }
+
+      .footer-wrap {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .top-panel-left span:nth-child(2) {
+        display: none;
+      }
+
+      .top-panel-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+      }
+
+      .category-filter-row .filter-item {
+        flex: 1 1 calc(50% - 4px);
+        text-align: center;
+      }
+
+      .banner-highlight .action-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    /* Друк / збереження у PDF: лише основний вміст */
+    @media print {
+      .top-panel, .main-header, .menu-nav, .breadcrumb-trail, footer, button {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Верхня технічна панель -->
+  <div class="top-panel">
+    <div class="top-panel-left">
+      <span>Соціологічна служба "Думка"</span>
+      <span>|</span>
+      <span>Телефон: 0 800 500-26</span>
+    </div>
+    <div class="top-panel-right">
+      <span id="accountLabel">Статус: Гість</span>
+      <button class="action-btn action-btn-light action-btn-sm" id="topCabinetBtn" onclick="navigateToTab('cabinet')">Вхід / Кабінет</button>
+    </div>
+  </div>
+
+  <!-- Головна плашка сайту -->
+  <header class="main-header">
+    <div class="logo-container" onclick="navigateToTab('home')">
+      <div class="logo-text">ДУМКА</div>
+      <div class="logo-sub">система моніторингу суспільних настроїв</div>
+    </div>
+    <div class="search-container">
+      <input type="text" id="siteSearchInput" placeholder="Пошук опитувань, тем або звітів...">
+      <button onclick="executeSiteSearch()">Знайти</button>
+    </div>
+  </header>
+
+  <!-- Головне меню за схемою структури -->
+  <nav class="menu-nav">
+    <div class="menu-btn active" id="btn-home" onclick="navigateToTab('home')">Головна</div>
+    <div class="menu-btn" id="btn-catalog" onclick="navigateToTab('catalog')">Каталог</div>
+    <div class="menu-btn" id="btn-analytics" onclick="navigateToTab('analytics')">Аналітика та звіти</div>
+    <div class="menu-btn" id="btn-cabinet" onclick="navigateToTab('cabinet')">Особистий кабінет</div>
+    <div class="menu-btn" id="btn-admin" onclick="navigateToTab('admin')">Адмін-панель</div>
+  </nav>
+
+  <!-- Основний контент -->
+  <main class="content-area">
+    <div class="breadcrumb-trail" id="breadcrumbs">Головна</div>
+
+    <!-- ================= 1. ГОЛОВНА СТОРІНКА ================= -->
+    <section id="view-home" class="view-section active">
+      <div class="banner-highlight">
+        <div>
+          <span class="tag-badge tag-badge-accent">Опитування дня</span>
+          <h2 style="font-size: 22px; margin-bottom: 8px;">Дистанційна освіта на платформі Microsoft Teams</h2>
+          <p style="font-size: 14px; opacity: 0.9; margin-bottom: 16px;">Дослідження ефективності та технічної стабільності онлайн-пар у 2026 році. 4 питання, близько 3 хвилин.</p>
+          <button class="action-btn action-btn-warning" onclick="startMSTeamsSurvey()">Пройти опитування</button>
+        </div>
+        <div class="banner-counter-box">
+          <div style="font-size: 28px; font-weight: bold;" id="mainCounter">1842</div>
+          <div style="font-size: 12px; color: #cbd5e1;">респондентів відповіли</div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 17px; margin-bottom: 12px;">Швидкий доступ</h3>
+      <div class="quick-access-row">
+        <div class="quick-box" onclick="startMSTeamsSurvey()">
+          <h4>Опитування дня: MS Teams</h4>
+          <p style="font-size: 13px; color: var(--muted);">Прямий перехід до анкети про онлайн-навчання та роботу на парах.</p>
+        </div>
+        <div class="quick-box" onclick="showLatestResults()">
+          <h4>Останні результати</h4>
+          <p style="font-size: 13px; color: var(--muted);">Статистика та відсотковий розподіл відповідей за поточними вибірками.</p>
+        </div>
+        <div class="quick-box" onclick="openSocisBlock()">
+          <h4>Архів бюлетенів SOCIS</h4>
+          <p style="font-size: 13px; color: var(--muted);">Звіти соціологічних досліджень та релізи 2026 року.</p>
+        </div>
+      </div>
+
+      <h3 style="font-size: 17px; margin-bottom: 12px;">Опитування за тематичними напрямами</h3>
+      <div class="cards-grid" id="homeCardsShell"></div>
+    </section>
+
+    <!-- ================= 2. КАТАЛОГ ================= -->
+    <section id="view-catalog" class="view-section">
+      <div class="panel-card">
+        <h2 style="font-size: 20px; margin-bottom: 6px;">Каталог опитувань</h2>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">Тематична фільтрація доступних соціологічних анкет.</p>
+
+        <div class="category-filter-row">
+          <button class="filter-item active" onclick="applyCatalogFilter('all', this)">Усі категорії</button>
+          <button class="filter-item" onclick="applyCatalogFilter('edu', this)">Освіта та молодь</button>
+          <button class="filter-item" onclick="applyCatalogFilter('soc', this)">Суспільство</button>
+          <button class="filter-item" onclick="applyCatalogFilter('tech', this)">Технології</button>
+        </div>
+
+        <div class="cards-grid" id="catalogCardsShell"></div>
+      </div>
+    </section>
+
+    <!-- ================= 3. ПРОХОДЖЕННЯ ОПИТУВАННЯ ================= -->
+    <section id="view-survey" class="view-section">
+      <div class="panel-card" style="max-width: 760px; margin: 0 auto;">
+        <span class="tag-badge">Форма опитування</span>
+        <h2 style="font-size: 20px; margin-top: 4px;" id="surveyTitleHeading">Дистанційна освіта на платформі Microsoft Teams</h2>
+        <p style="font-size: 13px; color: var(--muted);" id="surveyHintText">Оберіть варіант відповіді для поточного питання.</p>
+
+        <div class="progress-bar-shell">
+          <div class="progress-bar-fill" id="surveyProgressFill"></div>
+        </div>
+        <div style="font-size: 12px; font-weight: bold; color: var(--muted); margin-bottom: 14px;" id="surveyStepText">Питання 1 з 4</div>
+
+        <div id="surveyQuestionsShell"></div>
+
+        <div class="form-error" id="surveyError">Оберіть щонайменше один варіант відповіді, щоб продовжити.</div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 18px;">
+          <button class="action-btn action-btn-light" id="btnSurveyBack" onclick="stepSurveyBack()" style="visibility: hidden;">Назад</button>
+          <button class="action-btn" id="btnSurveyForward" onclick="stepSurveyForward()">Далі</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. ПОДЯКА ТА СТАТИСТИКА ================= -->
+    <section id="view-results" class="view-section">
+      <div class="panel-card" id="resultsThanksCard" style="text-align: center; max-width: 760px; margin: 0 auto 18px;">
+        <span class="tag-badge tag-badge-success">Статус: Відповідь зафіксовано</span>
+        <h2 style="font-size: 20px; margin: 8px 0 6px;">Дякуємо за участь в опитуванні!</h2>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Ваш результат додано до загальної соціологічної бази проєкту "Думка".</p>
+        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="action-btn" onclick="navigateToTab('analytics')">Розділ аналітики</button>
+          <button class="action-btn action-btn-light" onclick="downloadPdfSummary()">Зберегти у PDF</button>
+        </div>
+      </div>
+
+      <div class="panel-card" style="max-width: 760px; margin: 0 auto;">
+        <h3 style="font-size: 17px; margin-bottom: 6px;" id="resultsSurveyTitle">Результати опитування: Дистанційна освіта на платформі Microsoft Teams</h3>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 16px;" id="teamsResultsMeta"></p>
+        <div id="teamsResultsShell"></div>
+      </div>
+    </section>
+
+    <!-- ================= 5. АНАЛІТИКА ТА ЗВІТИ ================= -->
+    <section id="view-analytics" class="view-section">
+      <div class="panel-card">
+        <h2 style="font-size: 20px; margin-bottom: 6px;">Аналітика та звіти</h2>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Підсумкові дані опитувань платформи "Думка", інфографіка та архів документів КМІС і SOCIS.</p>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <button class="action-btn action-btn-light" onclick="scrollToElement('sub-teams')">Звіт: MS Teams</button>
+          <button class="action-btn action-btn-light" onclick="scrollToElement('sub-infographics')">Інфографіка</button>
+          <button class="action-btn action-btn-light" onclick="scrollToElement('sub-ai')">Звіт: ШІ в навчанні</button>
+          <button class="action-btn action-btn-light" onclick="scrollToElement('sub-socis')">Архів бюлетенів SOCIS</button>
+          <button class="action-btn" onclick="downloadPdfSummary()">Завантажити PDF</button>
+        </div>
+
+        <!-- Звіт: MS Teams -->
+        <div id="sub-teams" class="sub-panel">
+          <h3 class="sub-panel-title">Звіт: Дистанційна освіта на платформі Microsoft Teams</h3>
+          <p class="sub-panel-desc" id="teamsAnalyticsMeta"></p>
+          <div id="teamsAnalyticsBars"></div>
+        </div>
+
+        <!-- Інфографіка -->
+        <div id="sub-infographics" class="sub-panel">
+          <h3 class="sub-panel-title">Інфографіка: Розподіл використання сервісів онлайн-освіти</h3>
+          <p class="sub-panel-desc">Частка використання навчальних платформ за результатами соціологічного зрізу:</p>
+
+          <div class="stat-row">
+            <div class="stat-text"><span>Microsoft Teams (коледжі та ЗВО)</span> <span>58%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 58%; background-color: var(--primary);">58%</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-text"><span>Google Meet / Zoom</span> <span>34%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 34%; background-color: #b45309;">34%</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-text"><span>Інші спеціалізовані сервіси</span> <span>8%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 8%; background-color: #64748b;">8%</div></div>
+          </div>
+        </div>
+
+        <!-- Звіт: ШІ в навчанні -->
+        <div id="sub-ai" class="sub-panel">
+          <h3 class="sub-panel-title">Звіт: Використання штучного інтелекту в навчанні</h3>
+          <p class="sub-panel-desc">Частка студентів, які використовують нейромережі під час підготовки практичних завдань:</p>
+
+          <div class="stat-row">
+            <div class="stat-text"><span>Регулярно (щотижня)</span> <span>47%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 47%; background-color: var(--primary);">47%</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-text"><span>Епізодично</span> <span>36%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 36%; background-color: #b45309;">36%</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-text"><span>Не використовують</span> <span>17%</span></div>
+            <div class="stat-bar-container"><div class="stat-bar-value" style="width: 17%; background-color: #64748b;">17%</div></div>
+          </div>
+        </div>
+
+        <!-- Архів бюлетенів SOCIS -->
+        <div id="sub-socis" class="sub-panel">
+          <h3 class="sub-panel-title">Архів соціологічних бюлетенів SOCIS та звітів КМІС</h3>
+          <p class="sub-panel-desc">Офіційні прес-релізи дослідницьких центрів:</p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="doc-row">
+              <span><strong>Бюлетень SOCIS (socis.kiev.ua від 26.03.2026):</strong> Соціальні та освітні орієнтації студентів</span>
+              <button class="action-btn action-btn-light action-btn-sm" onclick="downloadPdfSummary()">PDF (1.8 MB)</button>
+            </div>
+            <div class="doc-row">
+              <span><strong>Звіт КМІС (kiis.com.ua):</strong> Дослідження динаміки сприйняття цифрових сервісів</span>
+              <button class="action-btn action-btn-light action-btn-sm" onclick="downloadPdfSummary()">PDF (2.4 MB)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 6. ОСОБИСТИЙ КАБІНЕТ ================= -->
+    <section id="view-cabinet" class="view-section">
+      <div class="cabinet-grid">
+        
+        <!-- Авторизація та Реєстрація -->
+        <div class="panel-card" id="authCard">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="font-size: 17px;" id="authCardHeader">Авторизація</h3>
+            <button class="action-btn action-btn-light action-btn-sm" onclick="toggleAuthRegistration()" id="authModeToggleBtn">Реєстрація</button>
+          </div>
+
+          <form id="cabinetAuthForm" onsubmit="submitAuthForm(event)">
+            <div class="input-box" id="regFieldFio" style="display: none;">
+              <label>ПІБ респондента</label>
+              <input type="text" id="inputFio" placeholder="Коваленко Давид">
+            </div>
+
+            <div class="input-box">
+              <label>Логін або Email</label>
+              <input type="text" id="inputEmail" required placeholder="student@college.edu.ua">
+            </div>
+
+            <div class="input-box" id="phoneFieldBox">
+              <label>Номер телефону</label>
+              <input type="tel" id="inputPhone" value="+38 (0__) ___-__-__" placeholder="+38 (0__) ___-__-__">
+            </div>
+
+            <div class="input-box">
+              <label>Пароль</label>
+              <input type="password" id="inputPassword" required placeholder="Введіть пароль">
+            </div>
+
+            <div id="regExtraFields" style="display: none;">
+              <div class="input-box">
+                <label>Заклад освіти / Група</label>
+                <input type="text" id="inputGroup" placeholder="Київський фаховий коледж, ІПЗ-24">
+              </div>
+            </div>
+
+            <div class="form-error" id="authError">Невірний логін або пароль.</div>
+            <button type="submit" class="action-btn" style="width: 100%; margin-top: 6px;" id="authSubmitBtn">Увійти</button>
+          </form>
+        </div>
+
+        <!-- Профіль (після входу) -->
+        <div class="panel-card" id="profileCard" style="display: none;">
+          <span class="tag-badge tag-badge-success" id="profileRoleBadge">Статус: Авторизовано</span>
+          <h3 style="font-size: 17px; margin: 4px 0 12px;">Мій профіль</h3>
+          <div style="font-size: 13px; line-height: 1.8; margin-bottom: 14px;">
+            <div id="profileNameRow"><strong>Ім'я:</strong> <span id="profileName"></span></div>
+            <div><strong>Роль:</strong> <span id="profileRole"></span></div>
+            <div><strong id="profileEmailLabel">Логін:</strong> <span id="profileEmail"></span></div>
+            <div id="profilePhoneRow"><strong>Телефон:</strong> <span id="profilePhone"></span></div>
+            <div id="profileGroupRow"><strong>Заклад / група:</strong> <span id="profileGroup"></span></div>
+            <div><strong>Пройдено анкет:</strong> <span id="profileCount">0</span></div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="action-btn" id="profileAdminBtn" style="display: none;" onclick="navigateToTab('admin')">Відкрити адмін-панель</button>
+            <button class="action-btn action-btn-light" onclick="signOutUser()">Вийти з акаунта</button>
+          </div>
+        </div>
+
+        <!-- Мої пройдені анкети -->
+        <div class="panel-card">
+          <h3 style="font-size: 17px; margin-bottom: 6px;">Мої пройдені анкети</h3>
+          <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Історія участі користувача в опитуваннях соціологічної платформи:</p>
+          <div id="surveyHistoryList">
+            <div style="padding: 14px; background-color: #fafbfc; border: 1px dashed var(--border); border-radius: 3px; font-size: 12px; color: var(--muted); text-align: center;">
+              Записів не знайдено. Пройдіть анкету для відображення в історії.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= 7. АДМІН-ПАНЕЛЬ ================= -->
+    <section id="view-admin" class="view-section">
+      <div class="panel-card" id="adminDashboard">
+        <h2 style="font-size: 20px; margin-bottom: 4px;">Адмін-панель</h2>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">Керування каталогом опитувань, створення нових анкет, перегляд відповідей та користувачів.</p>
+
+        <!-- 1. Таблиця опитувань -->
+        <div id="admin-surveys" class="sub-panel">
+          <h3 class="sub-panel-title">Наявні опитування</h3>
+          <p class="sub-panel-desc">Зміна статусу або видалення анкети одразу оновлює Головну сторінку та Каталог.</p>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Назва опитування</th>
+                  <th>Категорія</th>
+                  <th>Параметри</th>
+                  <th>Статус</th>
+                  <th style="width: 90px;">Дія</th>
+                </tr>
+              </thead>
+              <tbody id="adminSurveysTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Створення нового опитування -->
+        <div id="admin-create-survey" class="sub-panel">
+          <h3 class="sub-panel-title">Створити нове опитування</h3>
+          <p class="sub-panel-desc">Заповніть дані анкети та додайте питання з варіантами відповідей. Створене опитування одразу можна пройти на сайті.</p>
+
+          <form id="adminAddSurveyForm" onsubmit="adminCreateSurvey(event)">
+            <div class="admin-form-grid">
+              <div class="input-box">
+                <label>Назва опитування</label>
+                <input type="text" id="newSurveyTitle" required placeholder="Якість цифрових сервісів у коледжі">
+              </div>
+              <div class="input-box">
+                <label>Категорія</label>
+                <select id="newSurveyCat">
+                  <option value="edu">Освіта та молодь</option>
+                  <option value="soc">Суспільство</option>
+                  <option value="tech">Технології</option>
+                </select>
+              </div>
+              <div class="input-box">
+                <label>Статус</label>
+                <select id="newSurveyStatus">
+                  <option value="active">Активне</option>
+                  <option value="pending">Очікує запуску</option>
+                  <option value="planned">Анонс</option>
+                  <option value="done">Завершено</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="input-box">
+                <label>Параметри (тривалість та вибірка)</label>
+                <input type="text" id="newSurveyMeta" required placeholder="Тривалість: 3 хв | Вибірка: студенти">
+              </div>
+              <div class="input-box">
+                <label>Короткий опис</label>
+                <input type="text" id="newSurveyDesc" required placeholder="Дослідження зручності електронних розкладів.">
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 12px 0 8px;">
+              <strong style="font-size: 13px;">Питання анкети</strong>
+              <button type="button" class="action-btn action-btn-light action-btn-sm" onclick="adminAddQuestionField()">Додати питання</button>
+            </div>
+
+            <div id="adminQuestionsList"></div>
+
+            <button type="submit" class="action-btn" style="margin-top: 4px;">Створити опитування</button>
+          </form>
+        </div>
+
+        <!-- 3. Журнал відповідей респондентів -->
+        <div id="admin-responses" class="sub-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+            <h3 class="sub-panel-title" style="margin-bottom: 0;">Журнал відповідей респондентів</h3>
+            <button class="action-btn action-btn-danger action-btn-sm" onclick="adminClearResponses()">Очистити журнал</button>
+          </div>
+          <div id="adminResponsesBox"></div>
+        </div>
+
+        <!-- 4. Користувачі системи -->
+        <div id="admin-users" class="sub-panel">
+          <h3 class="sub-panel-title">Облікові записи користувачів</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ім'я / ПІБ</th>
+                  <th>Логін (Email)</th>
+                  <th>Телефон</th>
+                  <th>Роль</th>
+                  <th>Заклад / група</th>
+                  <th style="width: 90px;">Дія</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Підвал сайту -->
+  <footer>
+    <div class="footer-wrap">
+      <div>
+        <div style="font-weight: bold; margin-bottom: 4px; color: #ffffff;">Сайт соціологічних опитувань "Думка"</div>
+        <div>Лабораторні роботи з курсу "Основи програмної інженерії", група ІПЗ-24.</div>
+        <div>Розробник: Коваленко Давид</div>
+      </div>
+      <div class="footer-links">
+        <div style="font-weight: bold; margin-bottom: 4px; color: #ffffff;">Джерела соціологічних даних:</div>
+        <a href="https://kiis.com.ua/?cat=reports&lang=ukr" target="_blank">КМІС (kiis.com.ua)</a>
+        <a href="https://socis.kiev.ua" target="_blank">SOCIS (socis.kiev.ua)</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Скрипт логіки -->
+  <script>
+    let activeTabName = 'home';
+    let currentSurveyId = 'teams';
+    let currentSurveyStep = 1;
+    let currentSurveyAnswers = {};
+    let resultsSurveyId = 'teams';
+    const BASE_COUNTER = 1842;
+
+    const ADMIN_ACCOUNT = {
+      name: '',
+      email: 'admin',
+      phone: '',
+      password: 'admin',
+      role: 'admin',
+      group: ''
+    };
+
+    let localHistory = JSON.parse(localStorage.getItem('dumka_records') || '[]');
+    let activeUser = JSON.parse(localStorage.getItem('dumka_user') || 'null');
+    let localAccounts = JSON.parse(localStorage.getItem('dumka_accounts') || '[]').filter(acc => acc.role !== 'admin');
+    let isRegistration = false;
+
+    localAccounts.unshift({ ...ADMIN_ACCOUNT });
+    localStorage.setItem('dumka_accounts', JSON.stringify(localAccounts));
+    if (activeUser && activeUser.role === 'admin') {
+      activeUser = { ...ADMIN_ACCOUNT };
+      localStorage.setItem('dumka_user', JSON.stringify(activeUser));
+    }
+
+    const legacyName = localStorage.getItem('dumka_username');
+    if (!activeUser && legacyName) {
+      activeUser = { name: legacyName, email: '', phone: '', group: '', role: 'user' };
+      localStorage.setItem('dumka_user', JSON.stringify(activeUser));
+      localStorage.removeItem('dumka_username');
+    }
+
+    const categoryNames = {
+      edu: 'Освіта та молодь',
+      soc: 'Суспільство',
+      tech: 'Технології'
+    };
+
+    const statusConfig = {
+      active:  { label: 'Активне',        btn: '',                   defaultBtnText: 'Пройти опитування' },
+      pending: { label: 'Очікує запуску', btn: 'action-btn-neutral', defaultBtnText: 'Очікує запуску' },
+      planned: { label: 'Анонс',          btn: 'action-btn-neutral', defaultBtnText: 'Анонс' },
+      done:    { label: 'Завершено',      btn: 'action-btn-light',   defaultBtnText: 'Звіт в аналітиці' }
+    };
+
+    const defaultTeamsQuestions = [
+      {
+        key: 'q1', title: '1. Як часто ви використовуєте Microsoft Teams у навчальному процесі?',
+        options: [
+          { value: 'Щодня на парах',      label: 'Щодня на всіх навчальних парах',  base: 1105 },
+          { value: '2-3 рази на тиждень', label: '2-3 рази на тиждень за розкладом', base: 571 },
+          { value: 'Рідко',               label: 'Рідко, переважно інші канали',     base: 166 }
+        ]
+      },
+      {
+        key: 'q2', title: "2. Як ви оцінюєте стабільність аудіо та відеозв'язку під час занять у Teams?",
+        options: [
+          { value: 'Відмінно',            label: 'Відмінно, збоїв майже не спостерігається', base: 461 },
+          { value: 'Добре',               label: 'Добре, іноді трапляються короткі затримки', base: 718 },
+          { value: 'Задовільно / Погано', label: 'Посередньо або незадовільно',               base: 663 }
+        ]
+      },
+      {
+        key: 'q3', title: '3. Які функції Microsoft Teams для вас є найкориснішими?', multi: true,
+        options: [
+          { value: 'Запис лекцій',        label: 'Можливість запису лекцій для повторення',          base: 1621 },
+          { value: 'Чат та файли',        label: 'Предметні чати та сховище навчальних матеріалів', base: 1308 },
+          { value: 'Демонстрація екрана', label: 'Демонстрація презентацій викладача',               base: 1050 },
+          { value: 'Календар пар',        label: 'Вбудований календар із посиланнями на заняття',   base: 921 }
+        ]
+      },
+      {
+        key: 'q4', title: '4. Наскільки ви загалом задоволені організацією занять у MS Teams?',
+        options: [
+          { value: 'Повністю задоволений', label: 'Повністю задоволений', base: 663 },
+          { value: 'Скоріше задоволений',  label: 'Скоріше задоволений',  base: 792 },
+          { value: 'Нейтрально',           label: 'Нейтрально',           base: 276 },
+          { value: 'Незадоволений',        label: 'Незадоволений',        base: 111 }
+        ]
+      }
+    ];
+
+    const defaultSurveysData = [
+      {
+        id: 'teams', cat: 'edu', status: 'active',
+        title: 'Дистанційна освіта на платформі Microsoft Teams',
+        meta: 'Тривалість: 3 хв | 4 питання | Вибірка: студенти та викладачі',
+        desc: 'Оцінка стабільності дзвінків, зручності запису занять і спільних файлів у Teams.',
+        btnText: 'Пройти опитування',
+        questions: defaultTeamsQuestions
+      },
+      {
+        id: 'infra', cat: 'soc', status: 'pending',
+        title: "Міська інфраструктура та безбар'єрність",
+        meta: 'Тривалість: 4 хв | 3 питання | Вибірка: мешканці міст',
+        desc: 'Збір даних щодо зручності громадського транспорту, зупинок та пішохідних зон.',
+        btnText: 'Очікує запуску',
+        message: 'Триває формування вибірки. Спробуйте активне опитування щодо MS Teams.',
+        questions: [
+          {
+            key: 'q1', title: '1. Як ви оцінюєте зручність громадського транспорту у вашому місті?',
+            options: [
+              { value: 'Добре', label: 'Добре', base: 0 },
+              { value: 'Задовільно', label: 'Задовільно', base: 0 },
+              { value: 'Незадовільно', label: 'Незадовільно', base: 0 }
+            ]
+          },
+          {
+            key: 'q2', title: '2. Чи достатньо облаштовані пішохідні переходи та пандуси?',
+            options: [
+              { value: 'Так, достатньо', label: 'Так, достатньо', base: 0 },
+              { value: 'Лише в центрі', label: 'Лише в центральній частині', base: 0 },
+              { value: 'Ні, недостатньо', label: 'Ні, недостатньо', base: 0 }
+            ]
+          },
+          {
+            key: 'q3', title: '3. Що потребує першочергового покращення?', multi: true,
+            options: [
+              { value: 'Графік руху', label: 'Дотримання графіка руху транспорту', base: 0 },
+              { value: 'Освітлення вулиць', label: 'Освітлення вулиць та зупинок', base: 0 },
+              { value: 'Тротуари', label: 'Ремонт тротуарів і пониження бордюрів', base: 0 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'prices', cat: 'soc', status: 'pending',
+        title: 'Соціальні послуги та ціновий моніторинг',
+        meta: 'Тривалість: 5 хв | 3 питання | Вибірка: доросле населення',
+        desc: 'Регулярний всеукраїнський моніторинг базових споживчих потреб населення.',
+        btnText: 'Очікує запуску',
+        message: 'Опитування буде доступне лише для підтверджених акаунтів після запуску.',
+        questions: [
+          {
+            key: 'q1', title: '1. Як змінилися витрати вашої родини на базові продукти за останній квартал?',
+            options: [
+              { value: 'Зросли значно', label: 'Зросли значно', base: 0 },
+              { value: 'Зросли помірно', label: 'Зросли помірно', base: 0 },
+              { value: 'Не змінилися', label: 'Майже не змінилися', base: 0 }
+            ]
+          },
+          {
+            key: 'q2', title: '2. Чи користувалися ви електронними соціальними чи адміністративними послугами цього року?',
+            options: [
+              { value: 'Так, неодноразово', label: 'Так, неодноразово', base: 0 },
+              { value: 'Один раз', label: 'Один раз', base: 0 },
+              { value: 'Ні', label: 'Ні, не користувався', base: 0 }
+            ]
+          },
+          {
+            key: 'q3', title: '3. Оцініть доступність державних онлайн-сервісів:',
+            options: [
+              { value: 'Висока', label: 'Висока', base: 0 },
+              { value: 'Середня', label: 'Середня', base: 0 },
+              { value: 'Низька', label: 'Низька', base: 0 }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'ai', cat: 'tech', status: 'done',
+        title: 'Використання штучного інтелекту в навчанні',
+        meta: 'Тривалість: 6 хв | 7 питань | Завершено',
+        desc: 'Статистика використання нейромереж студентами під час підготовки практичних завдань.',
+        btnText: 'Звіт в аналітиці',
+        questions: []
+      },
+      {
+        id: 'cyber', cat: 'tech', status: 'planned',
+        title: 'Кібергігієна та захист персональних даних',
+        meta: 'Тривалість: 3 хв | 3 питання | Вибірка: студенти',
+        desc: 'Опитування щодо використання двофакторної автентифікації та надійності паролів.',
+        btnText: 'Анонс',
+        message: 'Опитування заплановане на наступний період.',
+        questions: [
+          {
+            key: 'q1', title: '1. Чи використовуєте ви двофакторну автентифікацію у навчальному акаунті?',
+            options: [
+              { value: 'Так, завжди', label: 'Так, у всіх сервісах', base: 0 },
+              { value: 'Лише в основних', label: 'Лише в основних сервісах', base: 0 },
+              { value: 'Ні', label: 'Ні, не використовую', base: 0 }
+            ]
+          },
+          {
+            key: 'q2', title: '2. Як часто ви змінюєте паролі до важливих облікових записів?',
+            options: [
+              { value: 'Раз на кілька місяців', label: 'Раз на кілька місяців', base: 0 },
+              { value: 'Раз на рік', label: 'Приблизно раз на рік', base: 0 },
+              { value: 'Лише за потреби', label: 'Лише у разі підозри на злам', base: 0 }
+            ]
+          },
+          {
+            key: 'q3', title: '3. Які способи захисту ви застосовуєте?', multi: true,
+            options: [
+              { value: 'Менеджер паролів', label: 'Менеджер паролів', base: 0 },
+              { value: 'Різні паролі', label: 'Різні паролі для різних сайтів', base: 0 },
+              { value: 'Сповіщення про вхід', label: 'Сповіщення про вхід з нового пристрою', base: 0 }
+            ]
+          }
+        ]
+      }
+    ];
+
+    let surveysData = JSON.parse(localStorage.getItem('dumka_surveys') || 'null') || JSON.parse(JSON.stringify(defaultSurveysData));
+    // Гарантуємо наявність питань у базових опитуваннях зі старого кешу
+    surveysData.forEach(s => {
+      if (s.id === 'teams') {
+        s.questions = JSON.parse(JSON.stringify(defaultTeamsQuestions));
+      } else if (!s.questions || !s.questions.length) {
+        const def = defaultSurveysData.find(d => d.id === s.id);
+        if (def && def.questions) s.questions = JSON.parse(JSON.stringify(def.questions));
+      }
+    });
+
+    function saveSurveysData() {
+      localStorage.setItem('dumka_surveys', JSON.stringify(surveysData));
+    }
+
+    /* ---------- Маска українського номера телефону: +38 (0__) ___-__-__ ---------- */
+    const PHONE_TEMPLATE = '+38 (0__) ___-__-__';
+    let currentPhoneDigits = '';
+
+    function formatPhoneFromDigits(digits) {
+      let res = PHONE_TEMPLATE;
+      for (let i = 0; i < digits.length && i < 9; i++) {
+        res = res.replace('_', digits[i]);
+      }
+      return res;
+    }
+
+    function setPhoneCursor(input) {
+      const nextUnderscore = input.value.indexOf('_');
+      const pos = nextUnderscore !== -1 ? nextUnderscore : input.value.length;
+      try {
+        input.setSelectionRange(pos, pos);
+      } catch (e) {}
+    }
+
+    function initPhoneMask() {
+      const phoneInput = document.getElementById('inputPhone');
+      if (!phoneInput) return;
+
+      phoneInput.value = PHONE_TEMPLATE;
+      currentPhoneDigits = '';
+
+      phoneInput.addEventListener('focus', function() {
+        if (!phoneInput.value || !phoneInput.value.startsWith('+38 (0')) {
+          phoneInput.value = formatPhoneFromDigits(currentPhoneDigits);
+        }
+        setTimeout(() => setPhoneCursor(phoneInput), 0);
+      });
+
+      phoneInput.addEventListener('click', function() {
+        if (phoneInput.selectionStart < 6) {
+          setPhoneCursor(phoneInput);
+        }
+      });
+
+      phoneInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (currentPhoneDigits.length > 0) {
+            currentPhoneDigits = currentPhoneDigits.slice(0, -1);
+            phoneInput.value = formatPhoneFromDigits(currentPhoneDigits);
+          }
+          setPhoneCursor(phoneInput);
+        } else if (e.key.length === 1 && /\d/.test(e.key)) {
+          e.preventDefault();
+          // Якщо першою цифрою вводять 0 після +38 (0, пропускаємо дубльований нуль
+          if (currentPhoneDigits.length === 0 && e.key === '0') {
+            setPhoneCursor(phoneInput);
+            return;
+          }
+          if (currentPhoneDigits.length < 9) {
+            currentPhoneDigits += e.key;
+            phoneInput.value = formatPhoneFromDigits(currentPhoneDigits);
+          }
+          setPhoneCursor(phoneInput);
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+        }
+      });
+
+      phoneInput.addEventListener('input', function() {
+        // Обробка вставки з буфера або мобільної клавіатури
+        let raw = phoneInput.value;
+        if (raw.startsWith('+38 (0')) {
+          raw = raw.slice(6);
+        } else {
+          raw = raw.replace(/^\+?3?8?\s*\(?0?/, '');
+        }
+        let digits = raw.replace(/\D/g, '');
+        if (digits.length === 10 && digits.startsWith('0')) {
+          digits = digits.slice(1);
+        }
+        currentPhoneDigits = digits.slice(0, 9);
+        phoneInput.value = formatPhoneFromDigits(currentPhoneDigits);
+        setPhoneCursor(phoneInput);
+      });
+    }
+
+    function resetPhoneMask() {
+      const phoneInput = document.getElementById('inputPhone');
+      currentPhoneDigits = '';
+      if (phoneInput) phoneInput.value = PHONE_TEMPLATE;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderSurveyCards();
+      refreshHistoryList();
+      updateAccountDisplay();
+      updateCounterDisplay();
+      initPhoneMask();
+      resetAdminQuestionBuilder();
+
+      document.getElementById('siteSearchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') executeSiteSearch();
+      });
+
+      document.getElementById('view-survey').addEventListener('change', function() {
+        document.getElementById('surveyError').style.display = 'none';
+      });
+    });
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[ch]));
+    }
+
+    function buildSurveyCard(s) {
+      const st = statusConfig[s.status] || statusConfig.pending;
+      const btnLabel = st.defaultBtnText || s.btnText;
+      return `
+        <div class="data-card" data-cat="${escapeHtml(s.cat)}">
+          <div>
+            <span class="tag-badge">Категорія: ${escapeHtml(categoryNames[s.cat] || s.cat)}</span>
+            <h4>${escapeHtml(s.title)}</h4>
+            <div class="card-meta">${escapeHtml(s.meta)}</div>
+            <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">${escapeHtml(s.desc)}</p>
+          </div>
+          <button class="action-btn ${st.btn}" onclick="handleSurveyAction('${escapeHtml(s.id)}')">${escapeHtml(btnLabel)}</button>
+        </div>`;
+    }
+
+    function renderSurveyCards() {
+      const html = surveysData.map(buildSurveyCard).join('');
+      document.getElementById('homeCardsShell').innerHTML = html;
+      document.getElementById('catalogCardsShell').innerHTML = html;
+    }
+
+    function handleSurveyAction(id) {
+      const s = surveysData.find(x => x.id === id);
+      if (!s) return;
+      if (s.status === 'active') {
+        startSurvey(s.id);
+      } else if (s.status === 'done') {
+        if (s.id === 'ai') {
+          openAnalyticsSection('sub-ai');
+        } else if (s.id === 'teams') {
+          openAnalyticsSection('sub-teams');
+        } else {
+          resultsSurveyId = s.id;
+          showResults(false);
+        }
+      } else {
+        alert(s.message || 'Опитування тимчасово недоступне або очікує запуску.');
+      }
+    }
+
+    function navigateToTab(tabId) {
+      if (tabId === 'admin' && (!activeUser || activeUser.role !== 'admin')) {
+        tabId = 'cabinet';
+      }
+
+      activeTabName = tabId;
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+
+      const currentView = document.getElementById('view-' + tabId);
+      const currentNavBtn = document.getElementById('btn-' + tabId);
+
+      if (currentView) currentView.classList.add('active');
+      if (currentNavBtn) currentNavBtn.classList.add('active');
+
+      if (tabId === 'results') renderSurveyResults(resultsSurveyId);
+      if (tabId === 'analytics') renderAnalytics();
+      if (tabId === 'admin') renderAdminPanel();
+
+      const activeSurvey = surveysData.find(x => x.id === currentSurveyId) || surveysData[0];
+      const breadcrumbsBox = document.getElementById('breadcrumbs');
+      const breadcrumbMap = {
+        'home': 'Головна',
+        'catalog': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; Каталог опитувань',
+        'survey': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; <a onclick="navigateToTab(\'catalog\')">Каталог</a> &gt; ' + escapeHtml(activeSurvey ? activeSurvey.title : 'Анкета'),
+        'results': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; Результати опитування',
+        'analytics': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; Аналітика та звіти',
+        'cabinet': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; Особистий кабінет',
+        'admin': '<a onclick="navigateToTab(\'home\')">Головна</a> &gt; Адмін-панель'
+      };
+      breadcrumbsBox.innerHTML = breadcrumbMap[tabId] || 'Головна';
+      window.scrollTo(0, 0);
+    }
+
+    /* ---------- Проходження будь-якого активного опитування ---------- */
+    function getActiveSurvey() {
+      return surveysData.find(x => x.id === currentSurveyId) || surveysData[0];
+    }
+
+    function startMSTeamsSurvey() {
+      startSurvey('teams');
+    }
+
+    function startSurvey(surveyId) {
+      const survey = surveysData.find(x => x.id === surveyId);
+      if (!survey || !survey.questions || !survey.questions.length) {
+        alert('Для цього опитування ще не додано питань.');
+        return;
+      }
+      currentSurveyId = survey.id;
+      currentSurveyStep = 1;
+      currentSurveyAnswers = {};
+      document.getElementById('surveyTitleHeading').innerText = survey.title;
+      document.getElementById('surveyError').style.display = 'none';
+      renderSurveyStep();
+      navigateToTab('survey');
+    }
+
+    function saveCurrentStepInput() {
+      const survey = getActiveSurvey();
+      const q = survey.questions[currentSurveyStep - 1];
+      if (!q) return false;
+      const checked = Array.from(document.querySelectorAll('#surveyQuestionsShell input:checked')).map(el => el.value);
+      if (checked.length === 0) return false;
+      currentSurveyAnswers[q.key] = q.multi ? checked : checked[0];
+      return true;
+    }
+
+    function stepSurveyForward() {
+      const survey = getActiveSurvey();
+      const totalSteps = survey.questions.length;
+      const errorBox = document.getElementById('surveyError');
+
+      if (!saveCurrentStepInput()) {
+        errorBox.style.display = 'block';
+        return;
+      }
+      errorBox.style.display = 'none';
+
+      if (currentSurveyStep < totalSteps) {
+        currentSurveyStep++;
+        renderSurveyStep();
+      } else {
+        completeSurveyProcess();
+      }
+    }
+
+    function stepSurveyBack() {
+      document.getElementById('surveyError').style.display = 'none';
+      if (currentSurveyStep > 1) {
+        saveCurrentStepInput();
+        currentSurveyStep--;
+        renderSurveyStep();
+      }
+    }
+
+    function renderSurveyStep() {
+      const survey = getActiveSurvey();
+      const totalSteps = survey.questions.length;
+      const q = survey.questions[currentSurveyStep - 1];
+      const saved = currentSurveyAnswers[q.key];
+
+      document.getElementById('surveyHintText').innerText = q.multi
+        ? 'Можна обрати один або кілька варіантів відповіді.'
+        : 'Оберіть один варіант відповіді.';
+
+      const inputType = q.multi ? 'checkbox' : 'radio';
+      const optionsHtml = q.options.map(o => {
+        const isChecked = Array.isArray(saved) ? saved.includes(o.value) : saved === o.value;
+        return `
+          <label class="answer-row">
+            <input type="${inputType}" name="survey_step_input" value="${escapeHtml(o.value)}" ${isChecked ? 'checked' : ''}>
+            <span>${escapeHtml(o.label)}</span>
+          </label>`;
+      }).join('');
+
+      document.getElementById('surveyQuestionsShell').innerHTML = `
+        <div class="question-wrapper">
+          <div class="question-heading">${escapeHtml(q.title)}</div>
+          <div class="answers-group">${optionsHtml}</div>
+        </div>`;
+
+      const pctVal = (currentSurveyStep / totalSteps) * 100;
+      document.getElementById('surveyProgressFill').style.width = pctVal + '%';
+      document.getElementById('surveyStepText').innerText = 'Питання ' + currentSurveyStep + ' з ' + totalSteps;
+
+      const backBtn = document.getElementById('btnSurveyBack');
+      const forwardBtn = document.getElementById('btnSurveyForward');
+
+      backBtn.style.visibility = (currentSurveyStep === 1) ? 'hidden' : 'visible';
+      forwardBtn.innerText = (currentSurveyStep === totalSteps) ? 'Завершити опитування' : 'Далі';
+    }
+
+    function completeSurveyProcess() {
+      const survey = getActiveSurvey();
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('uk-UA') + ' ' + now.toLocaleTimeString('uk-UA', {hour: '2-digit', minute: '2-digit'});
+      const record = {
+        surveyId: survey.id,
+        name: survey.title,
+        date: dateStr,
+        theme: categoryNames[survey.cat] || survey.cat,
+        user: activeUser ? (activeUser.name || activeUser.email) : 'Гість',
+        answers: { ...currentSurveyAnswers }
+      };
+
+      localHistory.unshift(record);
+      localStorage.setItem('dumka_records', JSON.stringify(localHistory));
+
+      resultsSurveyId = survey.id;
+      updateCounterDisplay();
+      refreshHistoryList();
+      updateAccountDisplay();
+      showResults(true);
+    }
+
+    function updateCounterDisplay() {
+      const counterEl = document.getElementById('mainCounter');
+      if (counterEl) counterEl.innerText = String(computeTeamsStats().total);
+    }
+
+    /* ---------- Підрахунок та відображення результатів ---------- */
+    const barColors = ['var(--primary)', 'var(--accent)', '#0284c7', '#b45309', '#64748b'];
+
+    function pct(part, total) {
+      return total ? Math.round(part / total * 100) : 0;
+    }
+
+    const legacyGradeMap = {
+      '5': 'Повністю задоволений',
+      '4': 'Скоріше задоволений',
+      '3': 'Нейтрально',
+      '2': 'Незадоволений'
+    };
+
+    function computeSurveyStats(surveyId) {
+      const survey = surveysData.find(x => x.id === surveyId) || surveysData[0];
+      const questions = (survey && survey.questions) ? survey.questions : defaultTeamsQuestions;
+      const isTeams = survey.id === 'teams';
+      const answered = localHistory.filter(r => r.answers && (r.surveyId ? r.surveyId === survey.id : isTeams));
+      const baseTotal = isTeams ? BASE_COUNTER : 0;
+      const total = baseTotal + answered.length;
+      const counts = {};
+
+      questions.forEach(q => {
+        counts[q.key] = q.options.map(o => {
+          let n = o.base || 0;
+          answered.forEach(r => {
+            let a = r.answers[q.key];
+            if (q.key === 'q4' && legacyGradeMap[a]) a = legacyGradeMap[a];
+            if (Array.isArray(a) ? a.includes(o.value) : a === o.value) n++;
+          });
+          return n;
+        });
+      });
+
+      return { survey, questions, total, counts };
+    }
+
+    function computeTeamsStats() {
+      const st = computeSurveyStats('teams');
+      const q4 = st.counts.q4 || [0, 0, 0, 0];
+      const q2 = st.counts.q2 || [0, 0, 0];
+      const q1 = st.counts.q1 || [0, 0, 0];
+      const q3 = st.counts.q3 || [0, 0, 0, 0];
+      return {
+        total: st.total,
+        counts: st.counts,
+        positive: pct(q4[0] + q4[1], st.total),
+        stable: pct(q2[0] + q2[1], st.total),
+        daily: pct(q1[0], st.total),
+        recordings: pct(q3[0], st.total)
+      };
+    }
+
+    function renderSurveyResults(surveyId) {
+      const st = computeSurveyStats(surveyId || 'teams');
+      document.getElementById('resultsSurveyTitle').innerText = 'Результати опитування: ' + st.survey.title;
+      document.getElementById('teamsResultsMeta').innerText =
+        'Підсумковий розподіл відповідей респондентів за питаннями анкети:';
+
+      document.getElementById('teamsResultsShell').innerHTML = st.questions.map(q => {
+        const rows = q.options.map((o, i) => {
+          const n = st.counts[q.key][i];
+          const p = pct(n, st.total);
+          return `
+            <div class="stat-row">
+              <div class="stat-text">
+                <span>${escapeHtml(o.label)}</span>
+                <span>${p}%</span>
+              </div>
+              <div class="stat-bar-container">
+                <div class="stat-bar-value" style="width: ${p}%; background-color: ${barColors[i % barColors.length]};">${p >= 8 ? p + '%' : ''}</div>
+              </div>
+            </div>`;
+        }).join('');
+        return `<div class="question-result"><h4>${escapeHtml(q.title)}</h4>${rows}</div>`;
+      }).join('');
+    }
+
+    /* ---------- Аналітика ---------- */
+    function renderAnalytics() {
+      const st = computeTeamsStats();
+      document.getElementById('teamsAnalyticsMeta').innerText =
+        'Ключові показники за результатами опитування респондентів:';
+
+      const summaryBars = [
+        { label: 'Використовують Teams щодня на всіх парах', val: st.daily, color: 'var(--primary)' },
+        { label: 'Стабільність звуку та відео оцінили як високу', val: st.stable, color: '#0284c7' },
+        { label: 'Відзначили корисність збереження записів занять', val: st.recordings, color: 'var(--accent)' },
+        { label: 'Задоволені організацією онлайн-занять загалом', val: st.positive, color: '#b45309' }
+      ];
+
+      document.getElementById('teamsAnalyticsBars').innerHTML = summaryBars.map(b => `
+        <div class="stat-row">
+          <div class="stat-text"><span>${b.label}</span> <span>${b.val}%</span></div>
+          <div class="stat-bar-container"><div class="stat-bar-value" style="width: ${b.val}%; background-color: ${b.color};">${b.val}%</div></div>
+        </div>
+      `).join('');
+    }
+
+    /* ---------- Результати та Історія ---------- */
+    function showResults(afterSurvey) {
+      document.getElementById('resultsThanksCard').style.display = afterSurvey ? 'block' : 'none';
+      navigateToTab('results');
+    }
+
+    function showLatestResults() {
+      resultsSurveyId = 'teams';
+      showResults(false);
+    }
+
+    function formatAnswersSummary(answers) {
+      if (!answers) return '';
+      const vals = Object.values(answers).map(v => {
+        if (Array.isArray(v)) return v.join(', ');
+        return legacyGradeMap[v] || v;
+      }).filter(Boolean);
+      return vals.join(' | ');
+    }
+
+    function refreshHistoryList() {
+      const box = document.getElementById('surveyHistoryList');
+      if (!box) return;
+
+      if (localHistory.length === 0) {
+        box.innerHTML = '<div style="padding: 14px; background-color: #fafbfc; border: 1px dashed var(--border); border-radius: 3px; font-size: 12px; color: var(--muted); text-align: center;">Записів не знайдено. Пройдіть анкету для відображення в історії.</div>';
+        return;
+      }
+
+      box.innerHTML = localHistory.map(item => {
+        const summary = formatAnswersSummary(item.answers);
+        const answersLine = summary
+          ? `<div style="font-size: 11px; color: var(--muted); margin-top: 2px;">Відповіді: ${escapeHtml(summary)}</div>`
+          : '';
+        return `
+        <div style="padding: 10px; border: 1px solid var(--border); border-radius: 3px; margin-bottom: 8px; background-color: #ffffff; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <div>
+            <div style="font-size: 13px; font-weight: bold;">${escapeHtml(item.name)}</div>
+            <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">Напрям: ${escapeHtml(item.theme)} | Час: ${escapeHtml(item.date)}</div>
+            ${answersLine}
+          </div>
+          <span class="tag-badge tag-badge-success" style="margin-bottom: 0;">Пройдено</span>
+        </div>`;
+      }).join('');
+    }
+
+    /* ---------- Навігація аналітики ---------- */
+    function openSocisBlock() {
+      openAnalyticsSection('sub-socis');
+    }
+
+    function openAnalyticsSection(elemId) {
+      navigateToTab('analytics');
+      scrollToElement(elemId);
+    }
+
+    function scrollToElement(elemId) {
+      const el = document.getElementById(elemId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function applyCatalogFilter(filterCat, buttonEl) {
+      document.querySelectorAll('.category-filter-row .filter-item').forEach(b => b.classList.remove('active'));
+      buttonEl.classList.add('active');
+
+      const cards = document.querySelectorAll('#catalogCardsShell .data-card');
+      cards.forEach(card => {
+        const itemCat = card.getAttribute('data-cat');
+        card.style.display = (filterCat === 'all' || itemCat === filterCat) ? 'flex' : 'none';
+      });
+    }
+
+    /* ---------- Кабінет та Авторизація ---------- */
+    function toggleAuthRegistration() {
+      isRegistration = !isRegistration;
+      document.getElementById('authError').style.display = 'none';
+      document.getElementById('authCardHeader').innerText = isRegistration ? 'Реєстрація' : 'Авторизація';
+      document.getElementById('regFieldFio').style.display = isRegistration ? 'block' : 'none';
+      document.getElementById('regExtraFields').style.display = isRegistration ? 'block' : 'none';
+      document.getElementById('authSubmitBtn').innerText = isRegistration ? 'Зареєструватися' : 'Увійти';
+      document.getElementById('authModeToggleBtn').innerText = isRegistration ? 'Вхід' : 'Реєстрація';
+    }
+
+    function submitAuthForm(e) {
+      e.preventDefault();
+      const mailInput = document.getElementById('inputEmail').value.trim();
+      const passInput = document.getElementById('inputPassword').value;
+      const fioInput = document.getElementById('inputFio').value.trim();
+      const groupInput = document.getElementById('inputGroup').value.trim();
+      const phoneInput = document.getElementById('inputPhone').value.trim();
+      const errorBox = document.getElementById('authError');
+      errorBox.style.display = 'none';
+
+      // Вхід для адміністратора (admin : admin)
+      if (mailInput.toLowerCase() === ADMIN_ACCOUNT.email) {
+        if (passInput !== ADMIN_ACCOUNT.password) {
+          errorBox.innerText = 'Невірний пароль для адмін-акаунта.';
+          errorBox.style.display = 'block';
+          return;
+        }
+        activeUser = { ...ADMIN_ACCOUNT };
+        localStorage.setItem('dumka_user', JSON.stringify(activeUser));
+        document.getElementById('cabinetAuthForm').reset();
+        resetPhoneMask();
+        updateAccountDisplay();
+        navigateToTab('admin');
+        return;
+      }
+
+      // Перевірка заповнення українського номера телефону для респондентів
+      if (currentPhoneDigits.length > 0 && currentPhoneDigits.length < 9) {
+        errorBox.innerText = 'Введіть повний номер телефону у форматі +38 (0XX) XXX-XX-XX.';
+        errorBox.style.display = 'block';
+        return;
+      }
+      const formattedPhone = currentPhoneDigits.length === 9 ? phoneInput : '';
+
+      const existing = localAccounts.find(acc => acc.role !== 'admin' && acc.email.toLowerCase() === mailInput.toLowerCase());
+      if (isRegistration || !existing) {
+        activeUser = {
+          name: (isRegistration && fioInput) ? fioInput : mailInput.split('@')[0],
+          email: mailInput,
+          phone: formattedPhone,
+          password: passInput,
+          role: 'user',
+          group: isRegistration ? groupInput : ''
+        };
+        if (!existing) {
+          localAccounts.push(activeUser);
+          localStorage.setItem('dumka_accounts', JSON.stringify(localAccounts));
+        }
+      } else {
+        if (formattedPhone) existing.phone = formattedPhone;
+        activeUser = existing;
+        localStorage.setItem('dumka_accounts', JSON.stringify(localAccounts));
+      }
+
+      localStorage.setItem('dumka_user', JSON.stringify(activeUser));
+
+      const wasRegistration = isRegistration;
+      document.getElementById('cabinetAuthForm').reset();
+      resetPhoneMask();
+      if (isRegistration) toggleAuthRegistration();
+
+      updateAccountDisplay();
+      alert(wasRegistration ? 'Реєстрацію завершено. Ласкаво просимо, ' + activeUser.name + '!' : 'Успішний вхід: ' + activeUser.name);
+    }
+
+    function updateAccountDisplay() {
+      const label = document.getElementById('accountLabel');
+      const topBtn = document.getElementById('topCabinetBtn');
+      const authCard = document.getElementById('authCard');
+      const profileCard = document.getElementById('profileCard');
+      const adminNavBtn = document.getElementById('btn-admin');
+      const isAdmin = Boolean(activeUser && activeUser.role === 'admin');
+
+      if (adminNavBtn) {
+        adminNavBtn.style.display = isAdmin ? 'block' : 'none';
+      }
+
+      if (activeUser) {
+        const displayLogin = activeUser.name || activeUser.email || 'admin';
+        label.innerHTML = 'Користувач: <strong>' + escapeHtml(displayLogin) + '</strong> (<a href="javascript:void(0)" onclick="signOutUser()" style="color:var(--primary);">Вийти</a>)';
+        topBtn.innerText = 'Кабінет';
+        authCard.style.display = 'none';
+        profileCard.style.display = 'block';
+        document.getElementById('profileRoleBadge').innerText = isAdmin ? 'Статус: Адміністратор' : 'Статус: Авторизовано';
+        document.getElementById('profileNameRow').style.display = activeUser.name ? 'block' : 'none';
+        document.getElementById('profileName').textContent = activeUser.name || '-';
+        document.getElementById('profileRole').textContent = isAdmin ? 'Адміністратор' : 'Респондент';
+        document.getElementById('profileEmailLabel').textContent = isAdmin ? 'Логін:' : 'Email:';
+        document.getElementById('profileEmail').textContent = activeUser.email || '-';
+        document.getElementById('profilePhoneRow').style.display = activeUser.phone ? 'block' : 'none';
+        document.getElementById('profilePhone').textContent = activeUser.phone || '-';
+        document.getElementById('profileGroupRow').style.display = activeUser.group ? 'block' : 'none';
+        document.getElementById('profileGroup').textContent = activeUser.group || '-';
+        document.getElementById('profileCount').textContent = localHistory.length;
+        document.getElementById('profileAdminBtn').style.display = isAdmin ? 'inline-block' : 'none';
+      } else {
+        label.innerText = 'Статус: Гість';
+        topBtn.innerText = 'Вхід / Кабінет';
+        authCard.style.display = 'block';
+        profileCard.style.display = 'none';
+      }
+
+      if (activeTabName === 'admin' && isAdmin) renderAdminPanel();
+    }
+
+    function signOutUser() {
+      localStorage.removeItem('dumka_user');
+      activeUser = null;
+      updateAccountDisplay();
+      navigateToTab('home');
+    }
+
+    /* ---------- Адмін-панель та конструктор опитувань ---------- */
+    function adminAddQuestionField(defaultTitle, defaultOpts) {
+      const container = document.getElementById('adminQuestionsList');
+      if (!container) return;
+      const idx = container.children.length + 1;
+      const box = document.createElement('div');
+      box.className = 'admin-question-box';
+      box.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong class="q-box-label" style="font-size: 12px; color: var(--primary);">Питання ${idx}</strong>
+          <button type="button" class="action-btn action-btn-danger action-btn-sm" onclick="adminRemoveQuestionField(this)">Видалити</button>
+        </div>
+        <div class="admin-form-grid" style="margin-bottom: 8px;">
+          <div class="input-box">
+            <label>Текст питання</label>
+            <input type="text" class="q-title-input" required placeholder="Введіть питання" value="${escapeHtml(defaultTitle || '')}">
+          </div>
+          <div class="input-box">
+            <label>Тип вибору</label>
+            <select class="q-type-select">
+              <option value="single">Одна відповідь</option>
+              <option value="multi">Кілька відповідей</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-box" style="margin-bottom: 0;">
+          <label>Варіанти відповідей (через кому)</label>
+          <input type="text" class="q-opts-input" required placeholder="Так, Скоріше так, Важко відповісти, Ні" value="${escapeHtml(defaultOpts || '')}">
+        </div>
+      `;
+      container.appendChild(box);
+      renumberAdminQuestions();
+    }
+
+    function adminRemoveQuestionField(btn) {
+      const container = document.getElementById('adminQuestionsList');
+      if (container.children.length <= 1) {
+        alert('Опитування має містити щонайменше одне питання.');
+        return;
+      }
+      btn.closest('.admin-question-box').remove();
+      renumberAdminQuestions();
+    }
+
+    function renumberAdminQuestions() {
+      const boxes = document.querySelectorAll('#adminQuestionsList .admin-question-box');
+      boxes.forEach((b, i) => {
+        const lbl = b.querySelector('.q-box-label');
+        if (lbl) lbl.textContent = 'Питання ' + (i + 1);
+      });
+    }
+
+    function resetAdminQuestionBuilder() {
+      const container = document.getElementById('adminQuestionsList');
+      if (!container) return;
+      container.innerHTML = '';
+      adminAddQuestionField();
+    }
+
+    function renderAdminPanel() {
+      if (!activeUser || activeUser.role !== 'admin') return;
+
+      document.getElementById('adminSurveysTable').innerHTML = surveysData.map(s => {
+        const statusOptions = Object.keys(statusConfig).map(k =>
+          `<option value="${k}" ${s.status === k ? 'selected' : ''}>${statusConfig[k].label}</option>`
+        ).join('');
+        const deleteBtn = s.id === 'teams'
+          ? '<span style="font-size:11px; color:var(--muted);">Базова</span>'
+          : `<button class="action-btn action-btn-danger action-btn-sm" onclick="adminDeleteSurvey('${escapeHtml(s.id)}')">Видалити</button>`;
+
+        return `<tr>
+          <td><strong>${escapeHtml(s.title)}</strong></td>
+          <td>${escapeHtml(categoryNames[s.cat] || s.cat)}</td>
+          <td style="font-size: 12px; color: var(--muted);">${escapeHtml(s.meta)}</td>
+          <td>
+            <select onchange="adminChangeSurveyStatus('${escapeHtml(s.id)}', this.value)" style="padding: 4px 6px; border: 1px solid var(--border); border-radius: 3px; font-size: 12px;">
+              ${statusOptions}
+            </select>
+          </td>
+          <td>${deleteBtn}</td>
+        </tr>`;
+      }).join('');
+
+      const respBox = document.getElementById('adminResponsesBox');
+      if (localHistory.length === 0) {
+        respBox.innerHTML = '<div style="padding: 14px; background-color: #ffffff; border: 1px dashed var(--border); border-radius: 3px; font-size: 12px; color: var(--muted); text-align: center;">Журнал порожній.</div>';
+      } else {
+        const rows = localHistory.map((r, idx) => {
+          const summary = formatAnswersSummary(r.answers) || '-';
+          return `<tr>
+            <td style="font-size: 12px;">${escapeHtml(r.date || '-')}</td>
+            <td>${escapeHtml(r.user || 'Гість')}</td>
+            <td><strong>${escapeHtml(r.name || '-')}</strong></td>
+            <td style="font-size: 12px;">${escapeHtml(summary)}</td>
+            <td><button class="action-btn action-btn-danger action-btn-sm" onclick="adminDeleteResponse(${idx})">Видалити</button></td>
+          </tr>`;
+        }).join('');
+
+        respBox.innerHTML = `
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Дата і час</th>
+                  <th>Респондент</th>
+                  <th>Опитування</th>
+                  <th>Відповіді</th>
+                  <th style="width: 90px;">Дія</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>`;
+      }
+
+      document.getElementById('adminUsersTable').innerHTML = localAccounts.map((acc, idx) => {
+        const isAdm = acc.role === 'admin';
+        const roleBadge = isAdm
+          ? '<span class="tag-badge tag-badge-accent">Адміністратор</span>'
+          : '<span class="tag-badge tag-badge-muted">Респондент</span>';
+        const actionCell = isAdm
+          ? '<span style="font-size:11px; color:var(--muted);">Системний</span>'
+          : `<button class="action-btn action-btn-danger action-btn-sm" onclick="adminDeleteUser(${idx})">Видалити</button>`;
+
+        return `<tr>
+          <td><strong>${escapeHtml(acc.name || '-')}</strong></td>
+          <td><code>${escapeHtml(acc.email)}</code></td>
+          <td>${escapeHtml(acc.phone || '-')}</td>
+          <td>${roleBadge}</td>
+          <td style="font-size: 12px; color: var(--muted);">${escapeHtml(acc.group || '-')}</td>
+          <td>${actionCell}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function adminChangeSurveyStatus(surveyId, newStatus) {
+      const s = surveysData.find(x => x.id === surveyId);
+      if (!s || !statusConfig[newStatus]) return;
+      s.status = newStatus;
+      s.btnText = statusConfig[newStatus].defaultBtnText;
+      saveSurveysData();
+      renderSurveyCards();
+      renderAdminPanel();
+    }
+
+    function adminCreateSurvey(e) {
+      e.preventDefault();
+      const title = document.getElementById('newSurveyTitle').value.trim();
+      const cat = document.getElementById('newSurveyCat').value;
+      const status = document.getElementById('newSurveyStatus').value;
+      const meta = document.getElementById('newSurveyMeta').value.trim();
+      const desc = document.getElementById('newSurveyDesc').value.trim();
+      if (!title) return;
+
+      const qBoxes = Array.from(document.querySelectorAll('#adminQuestionsList .admin-question-box'));
+      const questions = [];
+      for (let i = 0; i < qBoxes.length; i++) {
+        const qTitleRaw = qBoxes[i].querySelector('.q-title-input').value.trim();
+        const qType = qBoxes[i].querySelector('.q-type-select').value;
+        const qOptsRaw = qBoxes[i].querySelector('.q-opts-input').value;
+        const opts = qOptsRaw.split(',').map(s => s.trim()).filter(Boolean);
+        if (!qTitleRaw || opts.length < 2) {
+          alert('Вкажіть текст питання та щонайменше 2 варіанти відповіді через кому (питання ' + (i + 1) + ').');
+          return;
+        }
+        const numberedTitle = /^\d+\./.test(qTitleRaw) ? qTitleRaw : (i + 1) + '. ' + qTitleRaw;
+        questions.push({
+          key: 'q' + (i + 1),
+          title: numberedTitle,
+          multi: qType === 'multi',
+          options: opts.map(o => ({ value: o, label: o, base: 0 }))
+        });
+      }
+
+      const newSurvey = {
+        id: 'custom_' + Date.now(),
+        cat,
+        status,
+        title,
+        meta,
+        desc,
+        btnText: statusConfig[status].defaultBtnText,
+        message: 'Опитування тимчасово очікує запуску.',
+        questions
+      };
+
+      surveysData.push(newSurvey);
+      saveSurveysData();
+      renderSurveyCards();
+      renderAdminPanel();
+      document.getElementById('adminAddSurveyForm').reset();
+      resetAdminQuestionBuilder();
+      alert('Опитування "' + title + '" створено (' + questions.length + ' питань).');
+    }
+
+    function adminDeleteSurvey(surveyId) {
+      if (surveyId === 'teams') return;
+      surveysData = surveysData.filter(x => x.id !== surveyId);
+      saveSurveysData();
+      renderSurveyCards();
+      renderAdminPanel();
+    }
+
+    function adminDeleteResponse(index) {
+      localHistory.splice(index, 1);
+      localStorage.setItem('dumka_records', JSON.stringify(localHistory));
+      updateCounterDisplay();
+      refreshHistoryList();
+      updateAccountDisplay();
+      renderAdminPanel();
+    }
+
+    function adminClearResponses() {
+      localHistory = [];
+      localStorage.setItem('dumka_records', JSON.stringify(localHistory));
+      updateCounterDisplay();
+      refreshHistoryList();
+      updateAccountDisplay();
+      renderAdminPanel();
+    }
+
+    function adminDeleteUser(index) {
+      if (!localAccounts[index] || localAccounts[index].role === 'admin') return;
+      localAccounts.splice(index, 1);
+      localStorage.setItem('dumka_accounts', JSON.stringify(localAccounts));
+      renderAdminPanel();
+    }
+
+    /* ---------- Пошук ---------- */
+    function executeSiteSearch() {
+      const query = document.getElementById('siteSearchInput').value.toLowerCase().trim();
+      if (!query) return;
+
+      if (query.includes('teams') || query.includes('освіт') || query.includes('пари')) {
+        startMSTeamsSurvey();
+      } else if (/(^|\s)ші(\s|$)/.test(query) || query.includes('штучн') || query.includes('нейромереж')) {
+        openAnalyticsSection('sub-ai');
+      } else if (query.includes('адмін') || query.includes('admin')) {
+        navigateToTab('admin');
+      } else if (query.includes('звіт') || query.includes('socis') || query.includes('кміс') || query.includes('аналіт')) {
+        navigateToTab('analytics');
+      } else {
+        navigateToTab('catalog');
+      }
+    }
+
+    function downloadPdfSummary() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

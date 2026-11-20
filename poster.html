@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200, initial-scale=1.0">
+  <title>Постер - Платформа соціологічних опитувань "Думка"</title>
+  <style>
+    :root {
+      --primary: #1f3a60;
+      --primary-dark: #142640;
+      --primary-deep: #0e1c30;
+      --accent: #2e7d32;
+      --accent-bright: #4ade80;
+      --warning: #f59e0b;
+      --amber: #d97706;
+      --info: #0284c7;
+      --neutral: #64748b;
+      --card: #ffffff;
+      --soft: #f4f6f8;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #d0d7de;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    html, body {
+      width: 1200px;
+      height: 1600px;
+      margin: 0;
+      padding: 0;
+      background-color: var(--primary-dark);
+      overflow: hidden;
+    }
+
+    .poster-canvas {
+      position: relative;
+      width: 1200px;
+      height: 1600px;
+      background: linear-gradient(155deg, #142640 0%, #1f3a60 48%, #0f1e36 100%);
+      padding: 36px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      overflow: hidden;
+      color: var(--text);
+    }
+
+    /* Декоративні елементи Canva на тлі */
+    .bg-glow-green {
+      position: absolute;
+      top: -120px;
+      right: -90px;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(74, 222, 128, 0.16) 0%, rgba(74, 222, 128, 0) 70%);
+      pointer-events: none;
+    }
+
+    .bg-glow-amber {
+      position: absolute;
+      bottom: 180px;
+      left: -140px;
+      width: 560px;
+      height: 560px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.14) 0%, rgba(245, 158, 11, 0) 70%);
+      pointer-events: none;
+    }
+
+    .bg-shape-ring {
+      position: absolute;
+      top: 290px;
+      left: -80px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      border: 26px solid rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .dots-top-right {
+      position: absolute;
+      top: 96px;
+      right: 26px;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    .dots-bottom-left {
+      position: absolute;
+      bottom: 205px;
+      left: 22px;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .layer-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 1. Верхня панель стікерів */
+    .top-pills-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .glass-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 0.8px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--accent-bright);
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.25);
+      display: inline-block;
+    }
+
+    .amber-pill {
+      display: inline-block;
+      background-color: var(--warning);
+      color: var(--primary-dark);
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 0.8px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+    }
+
+    /* 2. Hero-секція */
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1.18fr 0.92fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .hero-brand-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .brand-display {
+      font-size: 88px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 3px;
+      line-height: 0.95;
+      margin-bottom: 12px;
+    }
+
+    .brand-subtitle-bar {
+      display: inline-block;
+      background: linear-gradient(90deg, #2e7d32 0%, #0284c7 100%);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1.4px;
+      padding: 7px 16px;
+      border-radius: 6px;
+      margin-bottom: 18px;
+    }
+
+    .hero-headline {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 1.18;
+      margin-bottom: 12px;
+    }
+
+    .hero-subtext {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #cbd5e1;
+      max-width: 560px;
+    }
+
+    /* Правий UI-мокап опитування дня + стікер */
+    .hero-mockup-wrap {
+      position: relative;
+      padding: 12px 10px 10px 6px;
+    }
+
+    .mockup-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 22px 24px;
+      box-shadow: 0 24px 48px rgba(7, 15, 29, 0.42);
+      transform: rotate(1.4deg);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .mockup-tag {
+      display: inline-block;
+      background-color: #dcfce7;
+      color: #15803d;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      line-height: 1.25;
+      padding-right: 76px;
+    }
+
+    .mockup-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mockup-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      background-color: #f8fafc;
+    }
+
+    .mockup-option.selected {
+      border-color: var(--accent);
+      background-color: #f0fdf4;
+      color: var(--primary-dark);
+      font-weight: bold;
+    }
+
+    .mockup-opt-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .radio-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .mockup-option.selected .radio-dot {
+      border-color: var(--accent);
+      background-color: var(--accent);
+      box-shadow: inset 0 0 0 3px #ffffff;
+    }
+
+    .mockup-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background-color: var(--warning);
+      color: var(--primary-dark);
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    .sticker-badge {
+      position: absolute;
+      top: -6px;
+      right: -4px;
+      background-color: var(--warning);
+      color: var(--primary-dark);
+      border: 4px solid #ffffff;
+      border-radius: 18px;
+      padding: 10px 16px;
+      text-align: center;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
+      transform: rotate(-4deg);
+      z-index: 4;
+    }
+
+    .sticker-num {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .sticker-lbl {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+      margin-top: 2px;
+    }
+
+    /* 3. Центральна картка: 4 Donut-діаграми */
+    .donut-card {
+      background-color: #ffffff;
+      border-radius: 24px;
+      padding: 24px 32px;
+      box-shadow: 0 18px 40px rgba(7, 15, 29, 0.25);
+    }
+
+    .card-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accent-vertical {
+      width: 6px;
+      height: 24px;
+      border-radius: 3px;
+      background-color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .card-section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--primary-dark);
+      letter-spacing: 0.4px;
+    }
+
+    .soft-tag {
+      background-color: #eef2f6;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .donuts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .donut-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px 12px;
+    }
+
+    .donut-svg-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 10px;
+    }
+
+    .donut-center-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--primary-dark);
+    }
+
+    .donut-caption {
+      font-size: 13px;
+      font-weight: bold;
+      line-height: 1.32;
+      color: var(--text);
+      max-width: 210px;
+    }
+
+    /* 4. Нижній Bento Grid (2 колонки) */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1.06fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .bento-card {
+      background-color: #ffffff;
+      border-radius: 24px;
+      padding: 24px 28px;
+      box-shadow: 0 18px 40px rgba(7, 15, 29, 0.25);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-card-soft {
+      background-color: #f8fafc;
+    }
+
+    .directions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .direction-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .icon-squircle {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .direction-body h4 {
+      font-size: 15px;
+      color: var(--primary-dark);
+      margin-bottom: 3px;
+    }
+
+    .direction-body p {
+      font-size: 12.5px;
+      line-height: 1.38;
+      color: var(--muted);
+    }
+
+    .features-pills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: auto;
+    }
+
+    .feature-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #eef2f6;
+      border: 1px solid #d8e1eb;
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: bold;
+      padding: 9px 11px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    .pill-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Права Bento-картка: Аналітика */
+    .analytics-subblock {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 15px 18px;
+      margin-bottom: 14px;
+    }
+
+    .subblock-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--primary-dark);
+      margin-bottom: 11px;
+    }
+
+    .capsule-row {
+      margin-bottom: 10px;
+    }
+
+    .capsule-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .capsule-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: bold;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .capsule-track {
+      height: 24px;
+      background-color: #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .capsule-fill {
+      height: 100%;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+    }
+
+    /* Сегментована шкала ШІ */
+    .segmented-bar {
+      display: flex;
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      gap: 3px;
+    }
+
+    .seg-part {
+      height: 100%;
+    }
+
+    .ai-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .ai-tile {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .ai-tile-pct {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 3px;
+    }
+
+    .ai-tile-lbl {
+      font-size: 11.5px;
+      font-weight: bold;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .partners-row {
+      margin-top: auto;
+      background-color: #eef2f6;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* 5. Нижній зелений CTA-банер з QR-кодом */
+    .cta-footer-banner {
+      background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      border-radius: 22px;
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      color: #ffffff;
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+    }
+
+    .cta-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .qr-box {
+      width: 96px;
+      height: 96px;
+      background-color: #ffffff;
+      border-radius: 14px;
+      padding: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+    }
+
+    .cta-text-block h3 {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .cta-text-block p {
+      font-size: 14px;
+      color: #dcfce7;
+      line-height: 1.4;
+    }
+
+    .server-badge {
+      display: inline-block;
+      background-color: rgba(20, 38, 64, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #ffffff;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-left: 4px;
+    }
+
+    .cta-right-pills {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .meta-pill-dark {
+      background-color: rgba(14, 28, 48, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    @page {
+      size: 1200px 1600px;
+      margin: 0;
+    }
+
+    @media print {
+      html, body, .poster-canvas {
+        width: 1200px;
+        height: 1600px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="poster-canvas">
+
+    <!-- Декоративні шари Canva -->
+    <div class="bg-glow-green"></div>
+    <div class="bg-glow-amber"></div>
+    <div class="bg-shape-ring"></div>
+
+    <!-- SVG Dot Grid Top Right -->
+    <svg class="dots-top-right" width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <g fill="#ffffff">
+        <circle cx="10" cy="10" r="3"/><circle cx="30" cy="10" r="3"/><circle cx="50" cy="10" r="3"/><circle cx="70" cy="10" r="3"/><circle cx="90" cy="10" r="3"/><circle cx="110" cy="10" r="3"/>
+        <circle cx="10" cy="30" r="3"/><circle cx="30" cy="30" r="3"/><circle cx="50" cy="30" r="3"/><circle cx="70" cy="30" r="3"/><circle cx="90" cy="30" r="3"/><circle cx="110" cy="30" r="3"/>
+        <circle cx="10" cy="50" r="3"/><circle cx="30" cy="50" r="3"/><circle cx="50" cy="50" r="3"/><circle cx="70" cy="50" r="3"/><circle cx="90" cy="50" r="3"/><circle cx="110" cy="50" r="3"/>
+        <circle cx="10" cy="70" r="3"/><circle cx="30" cy="70" r="3"/><circle cx="50" cy="70" r="3"/><circle cx="70" cy="70" r="3"/><circle cx="90" cy="70" r="3"/><circle cx="110" cy="70" r="3"/>
+        <circle cx="10" cy="90" r="3"/><circle cx="30" cy="90" r="3"/><circle cx="50" cy="90" r="3"/><circle cx="70" cy="90" r="3"/><circle cx="90" cy="90" r="3"/><circle cx="110" cy="90" r="3"/>
+        <circle cx="10" cy="110" r="3"/><circle cx="30" cy="110" r="3"/><circle cx="50" cy="110" r="3"/><circle cx="70" cy="110" r="3"/><circle cx="90" cy="110" r="3"/><circle cx="110" cy="110" r="3"/>
+      </g>
+    </svg>
+
+    <!-- SVG Dot Grid Bottom Left -->
+    <svg class="dots-bottom-left" width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <g fill="#4ade80">
+        <circle cx="10" cy="10" r="3"/><circle cx="30" cy="10" r="3"/><circle cx="50" cy="10" r="3"/><circle cx="70" cy="10" r="3"/><circle cx="90" cy="10" r="3"/><circle cx="110" cy="10" r="3"/>
+        <circle cx="10" cy="30" r="3"/><circle cx="30" cy="30" r="3"/><circle cx="50" cy="30" r="3"/><circle cx="70" cy="30" r="3"/><circle cx="90" cy="30" r="3"/><circle cx="110" cy="30" r="3"/>
+        <circle cx="10" cy="50" r="3"/><circle cx="30" cy="50" r="3"/><circle cx="50" cy="50" r="3"/><circle cx="70" cy="50" r="3"/><circle cx="90" cy="50" r="3"/><circle cx="110" cy="50" r="3"/>
+        <circle cx="10" cy="70" r="3"/><circle cx="30" cy="70" r="3"/><circle cx="50" cy="70" r="3"/><circle cx="70" cy="70" r="3"/><circle cx="90" cy="70" r="3"/><circle cx="110" cy="70" r="3"/>
+        <circle cx="10" cy="90" r="3"/><circle cx="30" cy="90" r="3"/><circle cx="50" cy="90" r="3"/><circle cx="70" cy="90" r="3"/><circle cx="90" cy="90" r="3"/><circle cx="110" cy="90" r="3"/>
+        <circle cx="10" cy="110" r="3"/><circle cx="30" cy="110" r="3"/><circle cx="50" cy="110" r="3"/><circle cx="70" cy="110" r="3"/><circle cx="90" cy="110" r="3"/><circle cx="110" cy="110" r="3"/>
+      </g>
+    </svg>
+
+    <!-- 1. Верхня панель пілюль -->
+    <div class="top-pills-row layer-content">
+      <div class="glass-pill">
+        <span class="status-dot"></span>
+        <span>СОЦІОЛОГІЧНА СЛУЖБА "ДУМКА"</span>
+      </div>
+      <div class="amber-pill">ДОСЛІДЖЕННЯ 2026 | ІПЗ-24</div>
+    </div>
+
+    <!-- 2. Hero-секція -->
+    <header class="hero-section layer-content">
+      <div class="hero-brand-wrap">
+        <div class="brand-display">ДУМКА</div>
+        <div class="brand-subtitle-bar">СИСТЕМА МОНІТОРИНГУ СУСПІЛЬНИХ НАСТРОЇВ</div>
+        <h1 class="hero-headline">Твій голос формує сучасну освіту та суспільство</h1>
+        <p class="hero-subtext">Всеукраїнська платформа анонімних онлайн-опитувань, відкритої аналітики та соціологічних зрізів у реальному часі.</p>
+      </div>
+
+      <div class="hero-mockup-wrap">
+        <div class="sticker-badge">
+          <div class="sticker-num">1842</div>
+          <div class="sticker-lbl">респондентів</div>
+        </div>
+
+        <div class="mockup-card">
+          <span class="mockup-tag">ОПИТУВАННЯ ДНЯ</span>
+          <div class="mockup-title">Дистанційна освіта у Microsoft Teams</div>
+          <div class="mockup-options">
+            <div class="mockup-option selected">
+              <div class="mockup-opt-left">
+                <span class="radio-dot"></span>
+                <span>Щодня на всіх парах</span>
+              </div>
+              <span>60%</span>
+            </div>
+            <div class="mockup-option">
+              <div class="mockup-opt-left">
+                <span class="radio-dot"></span>
+                <span>2-3 рази на тиждень</span>
+              </div>
+              <span>31%</span>
+            </div>
+            <div class="mockup-option">
+              <div class="mockup-opt-left">
+                <span class="radio-dot"></span>
+                <span>Рідко, інші канали</span>
+              </div>
+              <span>9%</span>
+            </div>
+          </div>
+          <div class="mockup-btn">
+            <span>Пройти за 3 хвилини</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="#142640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3. Центральна картка: 4 Donut Charts -->
+    <section class="donut-card layer-content">
+      <div class="card-header-bar">
+        <div class="card-title-group">
+          <div class="accent-vertical"></div>
+          <h2 class="card-section-title">КЛЮЧОВІ РЕЗУЛЬТАТИ: MICROSOFT TEAMS У НАВЧАННІ</h2>
+        </div>
+        <span class="soft-tag">Знеособлена статистика у %</span>
+      </div>
+
+      <div class="donuts-grid">
+        <!-- Donut 1: 60% -->
+        <div class="donut-item">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#1f3a60" stroke-width="11"
+                      stroke-dasharray="173.42 289.03" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="donut-center-val">60%</div>
+          </div>
+          <div class="donut-caption">Використовують Teams щодня на всіх парах</div>
+        </div>
+
+        <!-- Donut 2: 64% -->
+        <div class="donut-item">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#0284c7" stroke-width="11"
+                      stroke-dasharray="184.98 289.03" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="donut-center-val">64%</div>
+          </div>
+          <div class="donut-caption">Висока стабільність аудіо та відеозв'язку</div>
+        </div>
+
+        <!-- Donut 3: 88% -->
+        <div class="donut-item">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#2e7d32" stroke-width="11"
+                      stroke-dasharray="254.35 289.03" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="donut-center-val">88%</div>
+          </div>
+          <div class="donut-caption">Корисність збереження записів лекцій</div>
+        </div>
+
+        <!-- Donut 4: 79% -->
+        <div class="donut-item">
+          <div class="donut-svg-wrap">
+            <svg viewBox="0 0 120 120" width="120" height="120">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#e2e8f0" stroke-width="11"/>
+              <circle cx="60" cy="60" r="46" fill="none" stroke="#d97706" stroke-width="11"
+                      stroke-dasharray="228.33 289.03" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="donut-center-val">79%</div>
+          </div>
+          <div class="donut-caption">Задоволені організацією онлайн-занять</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Нижній Bento Grid -->
+    <section class="bento-grid layer-content">
+
+      <!-- Ліва картка: Тематичні напрями та функціонал -->
+      <div class="bento-card bento-card-soft">
+        <div class="card-header-bar" style="margin-bottom: 14px;">
+          <div class="card-title-group">
+            <div class="accent-vertical" style="background-color: var(--primary);"></div>
+            <h2 class="card-section-title">НАПРЯМИ ДОСЛІДЖЕНЬ ТА ФУНКЦІОНАЛ</h2>
+          </div>
+        </div>
+
+        <div class="directions-list">
+          <div class="direction-row">
+            <div class="icon-squircle" style="background-color: #1f3a60;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3L2 8L12 13L22 8L12 3Z" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M6 10.5V16.5C6 18.2 8.7 20 12 20C15.3 20 18 18.2 18 16.5V10.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M22 9V15" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="direction-body">
+              <h4>Освіта та молодь</h4>
+              <p>Онлайн-пари у MS Teams, якість цифрових сервісів ЗВО та коледжів.</p>
+            </div>
+          </div>
+
+          <div class="direction-row">
+            <div class="icon-squircle" style="background-color: #2e7d32;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="8" width="7" height="13" rx="1" stroke="#ffffff" stroke-width="2"/>
+                <rect x="14" y="4" width="7" height="17" rx="1" stroke="#ffffff" stroke-width="2"/>
+                <path d="M6 12H7M6 15H7M17 8H18M17 11H18M17 14H18" stroke="#dcfce7" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="direction-body">
+              <h4>Суспільство та місто</h4>
+              <p>Міська інфраструктура, безбар'єрність маршрутів і ціновий моніторинг.</p>
+            </div>
+          </div>
+
+          <div class="direction-row">
+            <div class="icon-squircle" style="background-color: #d97706;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <rect x="7" y="7" width="10" height="10" rx="2" stroke="#ffffff" stroke-width="2"/>
+                <path d="M9 3V7M15 3V7M9 17V21M15 17V21M3 9H7M3 15H7M17 9H21M17 15H21" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="direction-body">
+              <h4>Технології та ШІ</h4>
+              <p>Штучний інтелект у навчанні, кібергігієна та захист персональних даних.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="features-pills-grid">
+          <div class="feature-pill">
+            <span class="pill-check">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                <path d="M2.5 6L5 8.5L9.5 3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Перехід до анкети у 3 кліки</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-check">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                <path d="M2.5 6L5 8.5L9.5 3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Кабінет: +38 (0XX) XXX-XX-XX</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-check">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                <path d="M2.5 6L5 8.5L9.5 3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Конструктор анкет в адмінці</span>
+          </div>
+          <div class="feature-pill">
+            <span class="pill-check">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                <path d="M2.5 6L5 8.5L9.5 3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Вивантаження звітів у PDF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Права картка: Аналітика платформ та ШІ -->
+      <div class="bento-card">
+        <div class="card-header-bar" style="margin-bottom: 14px;">
+          <div class="card-title-group">
+            <div class="accent-vertical" style="background-color: var(--info);"></div>
+            <h2 class="card-section-title">АНАЛІТИКА ПЛАТФОРМ ТА ШІ</h2>
+          </div>
+          <span class="soft-tag">Зріз 2026</span>
+        </div>
+
+        <div class="analytics-subblock">
+          <div class="subblock-title">Сервіси онлайн-освіти в коледжах та ЗВО</div>
+
+          <div class="capsule-row">
+            <div class="capsule-labels"><span>Microsoft Teams</span><span>58%</span></div>
+            <div class="capsule-track">
+              <div class="capsule-fill" style="width: 58%; background-color: #1f3a60;">58%</div>
+            </div>
+          </div>
+
+          <div class="capsule-row">
+            <div class="capsule-labels"><span>Google Meet / Zoom</span><span>34%</span></div>
+            <div class="capsule-track">
+              <div class="capsule-fill" style="width: 34%; background-color: #d97706;">34%</div>
+            </div>
+          </div>
+
+          <div class="capsule-row">
+            <div class="capsule-labels"><span>Інші платформи</span><span>8%</span></div>
+            <div class="capsule-track">
+              <div class="capsule-fill" style="width: 11%; background-color: #64748b; justify-content: center; padding-right: 0;">8%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-subblock" style="margin-bottom: 12px;">
+          <div class="subblock-title">Штучний інтелект у підготовці студентів</div>
+
+          <div class="segmented-bar">
+            <div class="seg-part" style="width: 47%; background-color: #1f3a60;"></div>
+            <div class="seg-part" style="width: 36%; background-color: #d97706;"></div>
+            <div class="seg-part" style="width: 17%; background-color: #64748b;"></div>
+          </div>
+
+          <div class="ai-tiles-grid">
+            <div class="ai-tile">
+              <div class="ai-tile-pct" style="color: #1f3a60;">47%</div>
+              <div class="ai-tile-lbl">Регулярно (щотижня)</div>
+            </div>
+            <div class="ai-tile">
+              <div class="ai-tile-pct" style="color: #d97706;">36%</div>
+              <div class="ai-tile-lbl">Епізодично</div>
+            </div>
+            <div class="ai-tile">
+              <div class="ai-tile-pct" style="color: #64748b;">17%</div>
+              <div class="ai-tile-lbl">Не використовують</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="partners-row">
+          <span>Офіційні джерела даних: КМІС (kiis.com.ua) | SOCIS (socis.kiev.ua)</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 5. Нижній зелений CTA-банер з QR-кодом -->
+    <footer class="cta-footer-banner layer-content">
+      <div class="cta-left">
+        <div class="qr-box">
+          <!-- Чіткий векторний QR-код -->
+          <svg viewBox="0 0 80 80" width="80" height="80" shape-rendering="crispEdges">
+            <rect width="80" height="80" fill="#ffffff"/>
+            <!-- Top-left finder -->
+            <rect x="4" y="4" width="22" height="22" fill="#142640"/>
+            <rect x="7" y="7" width="16" height="16" fill="#ffffff"/>
+            <rect x="10" y="10" width="10" height="10" fill="#142640"/>
+            <!-- Top-right finder -->
+            <rect x="54" y="4" width="22" height="22" fill="#142640"/>
+            <rect x="57" y="7" width="16" height="16" fill="#ffffff"/>
+            <rect x="60" y="10" width="10" height="10" fill="#142640"/>
+            <!-- Bottom-left finder -->
+            <rect x="4" y="54" width="22" height="22" fill="#142640"/>
+            <rect x="7" y="57" width="16" height="16" fill="#ffffff"/>
+            <rect x="10" y="60" width="10" height="10" fill="#142640"/>
+            <!-- Center & data modules -->
+            <rect x="30" y="6" width="5" height="5" fill="#142640"/>
+            <rect x="40" y="6" width="5" height="5" fill="#142640"/>
+            <rect x="35" y="11" width="5" height="5" fill="#142640"/>
+            <rect x="45" y="11" width="5" height="5" fill="#142640"/>
+            <rect x="30" y="18" width="5" height="5" fill="#142640"/>
+            <rect x="40" y="18" width="5" height="5" fill="#142640"/>
+            <rect x="6" y="30" width="5" height="5" fill="#142640"/>
+            <rect x="16" y="30" width="5" height="5" fill="#142640"/>
+            <rect x="25" y="30" width="10" height="5" fill="#142640"/>
+            <rect x="40" y="30" width="5" height="10" fill="#2e7d32"/>
+            <rect x="50" y="30" width="5" height="5" fill="#142640"/>
+            <rect x="62" y="30" width="10" height="5" fill="#142640"/>
+            <rect x="11" y="38" width="5" height="5" fill="#142640"/>
+            <rect x="21" y="38" width="5" height="10" fill="#142640"/>
+            <rect x="31" y="40" width="6" height="6" fill="#142640"/>
+            <rect x="49" y="38" width="10" height="5" fill="#142640"/>
+            <rect x="66" y="38" width="8" height="8" fill="#142640"/>
+            <rect x="6" y="46" width="8" height="4" fill="#142640"/>
+            <rect x="31" y="50" width="5" height="8" fill="#142640"/>
+            <rect x="41" y="48" width="8" height="8" fill="#142640"/>
+            <rect x="55" y="48" width="5" height="5" fill="#142640"/>
+            <rect x="30" y="62" width="10" height="5" fill="#142640"/>
+            <rect x="45" y="60" width="6" height="6" fill="#2e7d32"/>
+            <rect x="56" y="56" width="10" height="10" fill="#142640"/>
+            <rect x="70" y="54" width="6" height="6" fill="#142640"/>
+            <rect x="34" y="70" width="6" height="6" fill="#142640"/>
+            <rect x="46" y="70" width="8" height="6" fill="#142640"/>
+            <rect x="60" y="70" width="5" height="6" fill="#142640"/>
+            <rect x="69" y="66" width="7" height="10" fill="#142640"/>
+          </svg>
+        </div>
+
+        <div class="cta-text-block">
+          <h3>ДОЛУЧАЙТЕСЬ ДО ОПИТУВАННЯ ОНЛАЙН</h3>
+          <p>Скануйте код або переходьте на сервер коледжу: <span class="server-badge">192.168.5.140:8000</span></p>
+        </div>
+      </div>
+
+      <div class="cta-right-pills">
+        <div class="meta-pill-dark">Гаряча лінія: 0 800 500-26</div>
+        <div class="meta-pill-dark">Курс: Основи програмної інженерії | Група ІПЗ-24</div>
+        <div class="meta-pill-dark">Розробник: Коваленко Давид</div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
